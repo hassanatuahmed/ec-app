@@ -8,16 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
 @RequiredArgsConstructor
 public class OrderController {
+
     private final OrderService orderService;
 
     @PostMapping("/add")
-    public ResponseEntity<Order> placeOrder(@RequestBody Order order) {
-        Order placedOrder = orderService.placeOrder(order);
+    public ResponseEntity<Order> placeOrder(@RequestBody Map<String, List<Long>> request) {
+        List<Long> productIds = request.get("productIds");
+        Order placedOrder = orderService.placeOrder(productIds);
         return ResponseEntity.ok(placedOrder);
     }
 
@@ -29,7 +32,6 @@ public class OrderController {
 
     @GetMapping("/")
     public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 }
